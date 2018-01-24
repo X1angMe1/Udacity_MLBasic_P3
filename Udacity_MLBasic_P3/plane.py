@@ -1,9 +1,7 @@
 from decimal import Decimal, getcontext
-
-from vector import Vector
+from Vector import Vector
 
 getcontext().prec = 30
-
 
 class Plane(object):
 
@@ -13,7 +11,7 @@ class Plane(object):
         self.dimension = 3
 
         if not normal_vector:
-            all_zeros = ['0']*self.dimension
+            all_zeros = [0]*self.dimension
             normal_vector = Vector(all_zeros)
         self.normal_vector = normal_vector
 
@@ -23,15 +21,14 @@ class Plane(object):
 
         self.set_basepoint()
 
-
     def set_basepoint(self):
         try:
-            n = self.normal_vector
+            n = self.normal_vector.coordinates
             c = self.constant_term
-            basepoint_coords = ['0']*self.dimension
+            basepoint_coords = [0]*self.dimension
 
             initial_index = Plane.first_nonzero_index(n)
-            initial_coefficient = n[initial_index]
+            initial_coefficient = Decimal(n[initial_index])
 
             basepoint_coords[initial_index] = c/initial_coefficient
             self.basepoint = Vector(basepoint_coords)
@@ -42,9 +39,7 @@ class Plane(object):
             else:
                 raise e
 
-
     def __str__(self):
-
         num_decimal_places = 3
 
         def write_coefficient(coefficient, is_initial_term=False):
@@ -67,7 +62,7 @@ class Plane(object):
 
             return output
 
-        n = self.normal_vector
+        n = self.normal_vector.coordinates # mei update
 
         try:
             initial_index = Plane.first_nonzero_index(n)
@@ -88,14 +83,40 @@ class Plane(object):
 
         return output
 
-
     @staticmethod
     def first_nonzero_index(iterable):
         for k, item in enumerate(iterable):
             if not MyDecimal(item).is_near_zero():
                 return k
         raise Exception(Plane.NO_NONZERO_ELTS_FOUND_MSG)
+        
+    def parallel(self,plane2):
+        return self.normal_vector.parallel(plane2.normal_vector)        
+        
+    def __eq__(self,plane2):
+        if not self.parallel(plane2):
+            return False
+        
+        x0 = self.basepoint
+        y0 = plane2.basepoint
+        diff = x0.minus(y0)
+        return diff.orthogonal(self.normal_vector)
 
+    def intersection(self,plane2):
+        if self == plane2:
+            return "infinite" #Decimal('infinite')
+        elif self.parallel(plane2):
+            return Decimal('NaN')
+        else:
+            a,b=self.normal_vector.coordinates
+            c,d=plane2.normal_vector.coordinates
+            k1 = self.constant_term
+            k2 = plane2.constant_term
+            
+            x=d*k1-b*k2
+            y=-c*k1+a*k2
+            one_over_denom = Decimal('1')/(a*d-b*c)
+            return Vector([x,y]).times(one_over_denom)
 
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):

@@ -27,15 +27,26 @@ class LinearSystem(object):
 
 
     def swap_rows(self, row1, row2):
-        pass # add your code here
+        r1_index = self.planes.index(row1)
+        r2_index = self.planes.index(row2)
+        self.planes[r1_index] = row2
+        self.planes[r2_index] = row1
+        return self
 
 
     def multiply_coefficient_and_row(self, coefficient, row):
-        pass # add your code here
+        r_index = self.planes.index(row)
+        self.planes[r_index].normal_vector =  self.planes[r_index].normal_vector.times(coefficient)
+        self.planes[r_index].constant_term = self.planes[r_index].constant_term * coefficient
+        return self
 
 
     def add_multiple_times_row_to_row(self, coefficient, row_to_add, row_to_be_added_to):
-        pass # add your code here
+        r1_index = self.planes.index(row_to_add)
+        r2_index = self.planes.index(row_to_be_added_to)
+        self.planes[r2_index].normal_vector = self.planes[r2_index].normal_vector.plus(self.planes[r1_index].normal_vector.times(coefficient))
+        self.planes[r2_index].constant_term = self.planes[r2_index].constant_term + self.planes[r1_index].constant_term * coefficient
+        return self
 
 
     def indices_of_first_nonzero_terms_in_each_row(self):
@@ -46,7 +57,7 @@ class LinearSystem(object):
 
         for i,p in enumerate(self.planes):
             try:
-                indices[i] = p.first_nonzero_index(p.normal_vector)
+                indices[i] = p.first_nonzero_index(p.normal_vector.coordinates) # mei: add coordinates
             except Exception as e:
                 if str(e) == Plane.NO_NONZERO_ELTS_FOUND_MSG:
                     continue
@@ -93,6 +104,7 @@ p3 = Plane(normal_vector=Vector(['1','0','-2']), constant_term='2')
 s = LinearSystem([p0,p1,p2,p3])
 
 print s.indices_of_first_nonzero_terms_in_each_row()
+
 print '{},{},{},{}'.format(s[0],s[1],s[2],s[3])
 print len(s)
 print s
@@ -102,3 +114,4 @@ print s
 
 print MyDecimal('1e-9').is_near_zero()
 print MyDecimal('1e-11').is_near_zero()
+
