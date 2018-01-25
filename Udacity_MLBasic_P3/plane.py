@@ -1,5 +1,5 @@
 from decimal import Decimal, getcontext
-from Vector import Vector
+from vector import Vector
 
 getcontext().prec = 30
 
@@ -117,6 +117,16 @@ class Plane(object):
             y=-c*k1+a*k2
             one_over_denom = Decimal('1')/(a*d-b*c)
             return Vector([x,y]).times(one_over_denom)
+
+    def times(self, n):
+        self.normal_vector = self.normal_vector.times(n)
+        self.constant_term *= n
+        return self
+
+    def plus(self, plane2):
+        self.normal_vector = self.normal_vector.plus(plane2.normal_vector)
+        self.constant_term += plane2.constant_term
+        return  self
 
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
