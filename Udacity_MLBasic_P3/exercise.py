@@ -10,9 +10,11 @@ p2 = Plane(normal_vector=Vector(['1','1','-1']), constant_term='3')
 p3 = Plane(normal_vector=Vector(['1','0','-2']), constant_term='2')
 
 s = LinearSystem([p0,p1,p2,p3])
+
 s.swap_rows(0,1)
 if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
     print '\ntest case 1 failed'
+
 
 s.swap_rows(1,3)
 if not (s[0] == p1 and s[1] == p3 and s[2] == p2 and s[3] == p0):
@@ -33,20 +35,12 @@ if not (s[0] == p1 and
         s[3] == p3):
     print '\ntest case 5 failed'
 
-print "\nafter test case 5: s.multiply_coefficient_and_row(-1,2)"
-print s
-
 s.multiply_coefficient_and_row(10,1)
 if not (s[0] == p1 and
         s[1] == Plane(normal_vector=Vector(['10','10','10']), constant_term='10') and
         s[2] == Plane(normal_vector=Vector(['-1','-1','1']), constant_term='-3') and
         s[3] == p3):
     print '\ntest case 6 failed'
-
-print "\nafter test case 6: s.multiply_coefficient_and_row(10,1)"
-# print s
-print "s[1]: ",s[1]
-print "Plane(normal_vector=Vector(['10','10','10']), constant_term='10'): ", Plane(normal_vector=Vector(['10','10','10']), constant_term='10')
 
 s.add_multiple_times_row_to_row(0,0,1)
 if not (s[0] == p1 and
@@ -55,9 +49,6 @@ if not (s[0] == p1 and
         s[3] == p3):
     print '\ntest case 7 failed'
 
-print "\nafter test case 7: s.add_multiple_times_row_to_row(0,0,1)"
-print s
-
 s.add_multiple_times_row_to_row(1,0,1)
 if not (s[0] == p1 and
         s[1] == Plane(normal_vector=Vector(['10','11','10']), constant_term='12') and
@@ -65,18 +56,12 @@ if not (s[0] == p1 and
         s[3] == p3):
     print '\ntest case 8 failed'
 
-print "\nafter test case 8: s.add_multiple_times_row_to_row(1,0,1)"
-print s
-
 s.add_multiple_times_row_to_row(-1,1,0)
 if not (s[0] == Plane(normal_vector=Vector(['-10','-10','-10']), constant_term='-10') and
         s[1] == Plane(normal_vector=Vector(['10','11','10']), constant_term='12') and
         s[2] == Plane(normal_vector=Vector(['-1','-1','1']), constant_term='-3') and
         s[3] == p3):
     print '\ntest case 9 failed'
-
-print "\nafter test case 9:s.add_multiple_times_row_to_row(-1,1,0)"
-print s
 
 """
 p1 = Plane(Vector([-7.926,8.625,-7.212]),-7.95)
@@ -101,12 +86,17 @@ else:
 
 p1 = Plane(Vector([-0.412,3.806,0.728]),-3.46)
 p2 = Plane(Vector([1.03,-9.515,-1.82]),8.65)
-print p1 == p2
+if p1 == p2:
+    print "equal"
+elif p1.parallel(p2):
+    print "parallel"
+else:
+    print "not parallel"
 
 # exercise for line
 L1 = Line(Vector([4.046,2.836]),1.21)
 L2 = Line(Vector([10.115,7.09]),3.025)
-print L1.intersection(L2) #infinite
+print L1.intersection(L2) infinite
 
 L1 = Line(Vector([7.204,3.182]),8.68)
 L2 = Line(Vector([8.172,4.114]),9.883)
@@ -183,11 +173,11 @@ print "r:",v.normalized()
 
 v = Vector([7.887,4.138])
 w = Vector([-8.802,6.776])
-print v.dotproduct(w)
+print v.dot(w)
 
 v = Vector([-5.955,-4.904,-1.874])
 w = Vector([-4.496,-8.775,7.103])
-print v.dotproduct(w)
+print v.dot(w)
 
 v = Vector([3.183,-7.627])
 w = Vector([-2.668,5.319])

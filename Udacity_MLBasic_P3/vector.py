@@ -6,7 +6,7 @@ class Vector(object):
         try:
             if not coordinates:
                 raise ValueError
-            coordinates = [Decimal(x) for x in coordinates]
+            coordinates = [Decimal(x) for x in coordinates] # add Decimal to support line call this class
             self.coordinates = tuple(coordinates)
             self.dimension = len(coordinates)
         except ValueError:
@@ -30,8 +30,7 @@ class Vector(object):
         return Vector(result)
 
     def times(self,n):
-        n = Decimal(n)
-        result = [x * n for x in self.coordinates]
+        result = [Decimal(x) * Decimal(n) for x in self.coordinates]
         return Vector(result)
 
     def magnitude(self):
@@ -57,9 +56,9 @@ class Vector(object):
         u1 = self.normalized()
         u2 = v.normalized()
         temp = u1.dot(u2)
-        if temp > 1:
+        if abs(temp - 1) < 1e-10:
             temp =1
-        if temp < -1:
+        if abs(temp + 1) < 1e-10:
             temp = -1
         result = math.acos(temp)
         if degree:

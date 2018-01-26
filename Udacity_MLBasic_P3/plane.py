@@ -25,7 +25,7 @@ class Plane(object):
         try:
             n = self.normal_vector.coordinates
             c = self.constant_term
-            basepoint_coords = [0]*self.dimension
+            basepoint_coords = ['0']*self.dimension
 
             initial_index = Plane.first_nonzero_index(n)
             initial_coefficient = Decimal(n[initial_index])
@@ -126,7 +126,7 @@ class Plane(object):
     def plus(self, plane2):
         self.normal_vector = self.normal_vector.plus(plane2.normal_vector)
         self.constant_term += plane2.constant_term
-        return  self
+        return  Plane(self.normal_vector, self.constant_term) # new Plane to avoid basepoint change
 
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):

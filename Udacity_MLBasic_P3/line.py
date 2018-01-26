@@ -11,7 +11,7 @@ class Line(object):
         self.dimension = 2
 
         if not normal_vector:
-            all_zeros = [0]*self.dimension
+            all_zeros = ['0']*self.dimension
             normal_vector = Vector(all_zeros)
         self.normal_vector = normal_vector
 
@@ -25,7 +25,7 @@ class Line(object):
         try:
             n = self.normal_vector.coordinates
             c = self.constant_term
-            basepoint_coords = [0]*self.dimension
+            basepoint_coords = ['0']*self.dimension
 
             initial_index = Line.first_nonzero_index(n)
             initial_coefficient = Decimal(n[initial_index])
