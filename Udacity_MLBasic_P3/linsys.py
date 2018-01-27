@@ -25,6 +25,48 @@ class LinearSystem(object):
         except AssertionError:
             raise Exception(self.ALL_PLANES_MUST_BE_IN_SAME_DIM_MSG)
 
+    def compute_rref(self):
+        tf = self.compute_triangular_form()
+
+        # Step1: set c of x/y/z to 1
+        l = len(tf)
+        if len(tf) > 3:
+            l = 3
+        for i in range(l):
+            tf = tf.set_c_to_1(i)
+        
+        # step2: z into x/y row
+        non_zero = tf.indices_of_first_nonzero_terms_in_each_row()
+        y = -1
+        z = -1
+        if 1 in non_zero:
+            y = non_zero.index(1)
+        if 2 in non_zero:
+            z = non_zero.index(2)
+        if z != -1:
+            if y != -1:
+                y_z_c = tf[y].normal_vector.coordinates[2]
+                tf = tf.add_multiple_times_row_to_row(-y_z_c, z,y) # add z to y row
+
+            x_z_c = tf[0].normal_vector.coordinates[2]
+            tf = tf.add_multiple_times_row_to_row(-x_z_c, z,0) # add z to x row
+
+        # step3: y into x row
+        if y != -1:
+            x_y_c = tf[0].normal_vector.coordinates[1]
+            tf = tf.add_multiple_times_row_to_row(-x_y_c, y, 0)
+        return tf
+
+    def set_c_to_1(self,row):
+        non_zero = self.indices_of_first_nonzero_terms_in_each_row()
+        r = -1
+        if row in non_zero:
+            r = non_zero.index(row)
+        if r != -1:
+            c = self[r].normal_vector.coordinates[row]
+            self = self.multiply_coefficient_and_row(1/c,row)
+        return self
+
     def compute_triangular_form(self):
         system = deepcopy(self)
         for i in range(len(system) - 1):

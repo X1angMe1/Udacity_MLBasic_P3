@@ -6,7 +6,9 @@ class Vector(object):
         try:
             if not coordinates:
                 raise ValueError
-            coordinates = [Decimal(x) for x in coordinates] # add Decimal to support line call this class
+            # coordinates = [Decimal(x) for x in coordinates] # add Decimal to support line call this class
+            for i,c in enumerate(coordinates):
+                coordinates[i] = Decimal('0') if abs(Decimal(c)) < 1e-10 else Decimal(c)
             self.coordinates = tuple(coordinates)
             self.dimension = len(coordinates)
         except ValueError:
@@ -82,7 +84,7 @@ class Vector(object):
         return self.parallel(v),self.orthogonal(v)
         
     def is_zero(self, tolerance=1e-10):
-        return self.magnitude() < tolerance
+        return abs(self.magnitude()) < tolerance
 
     def proj(self,b):
         # return the component vector of self that parallel to b
