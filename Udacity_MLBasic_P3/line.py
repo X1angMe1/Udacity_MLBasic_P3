@@ -23,12 +23,12 @@ class Line(object):
 
     def set_basepoint(self):
         try:
-            n = self.normal_vector.coordinates
+            n = self.normal_vector.coordinates # mei: add coordinates
             c = self.constant_term
             basepoint_coords = ['0']*self.dimension
 
             initial_index = Line.first_nonzero_index(n)
-            initial_coefficient = Decimal(n[initial_index])
+            initial_coefficient = Decimal(n[initial_index]) # mei: add Decimal
 
             basepoint_coords[initial_index] = c/initial_coefficient
             self.basepoint = Vector(basepoint_coords)

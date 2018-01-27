@@ -11,7 +11,7 @@ class Plane(object):
         self.dimension = 3
 
         if not normal_vector:
-            all_zeros = [0]*self.dimension
+            all_zeros = ['0']*self.dimension
             normal_vector = Vector(all_zeros)
         self.normal_vector = normal_vector
 
@@ -23,12 +23,12 @@ class Plane(object):
 
     def set_basepoint(self):
         try:
-            n = self.normal_vector.coordinates
+            n = self.normal_vector.coordinates # mei: add coordinates
             c = self.constant_term
             basepoint_coords = ['0']*self.dimension
 
             initial_index = Plane.first_nonzero_index(n)
-            initial_coefficient = Decimal(n[initial_index])
+            initial_coefficient = Decimal(n[initial_index]) # mei: add Decimal
 
             basepoint_coords[initial_index] = c/initial_coefficient
             self.basepoint = Vector(basepoint_coords)
@@ -62,7 +62,7 @@ class Plane(object):
 
             return output
 
-        n = self.normal_vector.coordinates # mei update
+        n = self.normal_vector.coordinates # mei: add coordinates
 
         try:
             initial_index = Plane.first_nonzero_index(n)
@@ -96,9 +96,10 @@ class Plane(object):
     def __eq__(self,plane2):
         if not self.parallel(plane2):
             return False
-        
         x0 = self.basepoint
         y0 = plane2.basepoint
+        if x0 is None or y0 is None:
+            return x0 is None and y0 is None
         diff = x0.minus(y0)
         return diff.orthogonal(self.normal_vector)
 
